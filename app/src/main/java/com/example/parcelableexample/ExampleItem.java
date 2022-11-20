@@ -1,24 +1,45 @@
 package com.example.parcelableexample;
 
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.view.View;
 import android.widget.ImageView;
 
-public class ExampleItem {
-    private Drawable imageView;
+public class ExampleItem implements Parcelable {
+    private int imageResourceId;
     private String line1, line2;
 
-    public ExampleItem(Drawable imageView, String line1, String line2) {
-        this.imageView = imageView;
+    public ExampleItem(int imageResourceId, String line1, String line2) {
+        this.imageResourceId = imageResourceId;
         this.line1 = line1;
         this.line2 = line2;
     }
 
-    public Drawable getImageView() {
-        return imageView;
+    protected ExampleItem(Parcel in) {
+        imageResourceId = in.readInt();
+        line1 = in.readString();
+        line2 = in.readString();
     }
 
-    public void setImageView(Drawable imageView) {
-        this.imageView = imageView;
+    public static final Creator<ExampleItem> CREATOR = new Creator<ExampleItem>() {
+        @Override
+        public ExampleItem createFromParcel(Parcel in) {
+            return new ExampleItem(in);
+        }
+
+        @Override
+        public ExampleItem[] newArray(int size) {
+            return new ExampleItem[size];
+        }
+    };
+
+    public int getImageResourceId() {
+        return imageResourceId;
+    }
+
+    public void setImageResourceId(int imageResourceId) {
+        this.imageResourceId = imageResourceId;
     }
 
     public String getLine1() {
@@ -35,5 +56,17 @@ public class ExampleItem {
 
     public void setLine2(String line2) {
         this.line2 = line2;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(imageResourceId);
+        parcel.writeString(line1);
+        parcel.writeString(line2);
     }
 }
